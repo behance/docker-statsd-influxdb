@@ -4,6 +4,7 @@
 
 FROM node:0.12.7-slim
 
+RUN apt-get update && apt-get install -y git
 RUN git clone https://github.com/etsy/statsd.git
 RUN cd /statsd && npm install statsd-influxdb-backend
 
