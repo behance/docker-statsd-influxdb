@@ -1,5 +1,5 @@
 (function() {
-  
+
   if (process.env.INFLUXDB_HOST !== undefined) {
     var host = process.env.INFLUXDB_HOST;
   } else if (process.env.INFLUXDB_MASTER_SERVICE_HOST !== undefined) {
@@ -7,7 +7,7 @@
   } else {
     var host = "127.0.0.1";
   }
-  
+
   if (process.env.INFLUXDB_PORT !== undefined) {
     var port = parseInt(process.env.INFLUXDB_PORT);
   } else if (process.env.INFLUXDB_MASTSER_SERVICE_PORT !== undefined) {
@@ -15,11 +15,12 @@
   } else {
     var port = 8086;
   }
-  
+
   return {
     influxdb: {
       host: host,
       port: port,
+      ssl: process.env.INFLUXDB_SSL || "false",
       database: process.env.INFLUXDB_DATABASE || "site_dev",
       username: process.env.INFLUXDB_USERNAME || "root",
       password: process.env.INFLUXDB_PASSWORD || "root",
@@ -32,11 +33,14 @@
         flushInterval: parseInt(process.env.STATSD_PROXY_FLUSH_INTERVAL) || 1000
       }
     },
+    deleteTimers: true,
+    deleteCounters: true,
+    flush_counts: false,
     port: parseInt(process.env.STATSD_PORT) || 8125,
     debug: process.env.STATSD_DEBUG || false,
     backends: ['statsd-influxdb-backend'],
-    legacyNamespace: false
+    legacyNamespace: false,
+    server: "./servers/tcp"
   };
-  
-})();
 
+})();
